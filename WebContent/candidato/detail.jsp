@@ -4,7 +4,7 @@
 
 <%@ include file="../includes/head.jsp" %>
 
-<h1>Detalle del Candidato</h1>
+<h1>Detalle del Candidato <%=request.getParameter("nombre")%></h1>
 <br><a href="<%=Constantes.WEB_HOME %>candidato/list.jsp">Volver</a><br>
 <ul>
 	<li>Nombre: <%=request.getParameter("nombre")%>

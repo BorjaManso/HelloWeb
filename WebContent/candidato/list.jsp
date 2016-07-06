@@ -13,7 +13,7 @@
 		ArrayList<Candidato> listaCandidatos = new ArrayList<Candidato>();
 		
 		for(int i=0; i<5;i++){
-			listaCandidatos.add(new Candidato("nombre " + (i+1), "apellido1", "apellido2", (i+1)*11111111+"A", "a@a.com", 10));
+			listaCandidatos.add(new Candidato("pepe" + (i+1), "apellido1", "apellido2", (i+1)*11111111+"A", "a@a.com", 10));
 		}
 		
 	
