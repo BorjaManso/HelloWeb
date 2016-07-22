@@ -68,8 +68,28 @@ public class PlanetDAOImpl implements PlanetDAO {
 
 	@Override
 	public Planeta getById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Planeta p = null;
+		
+		try{
+			conexion = db.getConexion();
+			CallableStatement cst = conexion.prepareCall("{call detallePlaneta(?)}");
+			cst.setLong(1, id);
+			
+			ResultSet rs = cst.executeQuery();			
+			while (rs.next()) {
+				p = new Planeta();
+				p.setId(rs.getLong("id"));
+				p.setNombre(rs.getString("nombre"));
+				p.setImagen(rs.getString("imagen"));
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			db.desconectar();
+		}		
+		
+		return p;
 	}
 
 	@Override
@@ -80,14 +100,53 @@ public class PlanetDAOImpl implements PlanetDAO {
 
 	@Override
 	public boolean delete(long id) {
-		// TODO Auto-generated method stub
-		return false;
+		Planeta p = null;	
+		boolean resul = false;
+		
+		try{
+			conexion = db.getConexion();
+			CallableStatement cst = conexion.prepareCall("{call eliminarPlaneta(?)}");
+			cst.setLong(1, id);
+			
+			ResultSet rs = cst.executeQuery();		
+			
+			//TODO seguir desde aqui!
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			db.desconectar();
+		}		
+		
+		return resul;
 	}
 
 	@Override
 	public List<Planeta> search(String criterio) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Planeta> listaResul = new ArrayList<Planeta>();
+		Planeta p = null;
+		try{
+			conexion = db.getConexion();
+			CallableStatement cst = conexion.prepareCall("{call buscarPlanetas(?)}");
+			cst.setString(1, criterio);
+			
+			ResultSet rs = cst.executeQuery();			
+			while (rs.next()) {
+				p = new Planeta();
+				p.setId(rs.getLong("id"));
+				p.setNombre(rs.getString("nombre"));
+				p.setImagen(rs.getString("imagen"));
+				// add en lista
+				listaResul.add(p);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			db.desconectar();
+		}		
+		
+		return listaResul;
 	}
 
 }

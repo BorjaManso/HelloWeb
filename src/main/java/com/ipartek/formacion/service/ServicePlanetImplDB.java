@@ -35,14 +35,12 @@ public class ServicePlanetImplDB implements ServicePlanet {
 
 	@Override
 	public Planeta getById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return daoPlaneta.getById(id);
 	}
 
 	@Override
 	public boolean delete(long id) {
-		// TODO Auto-generated method stub
-		return false;
+		return daoPlaneta.delete(id);
 	}
 
 	@Override
@@ -53,8 +51,7 @@ public class ServicePlanetImplDB implements ServicePlanet {
 
 	@Override
 	public List<Planeta> search(String criterio) {
-		// TODO Auto-generated method stub
-		return null;
+		return daoPlaneta.search(criterio);
 	}
 
 }
