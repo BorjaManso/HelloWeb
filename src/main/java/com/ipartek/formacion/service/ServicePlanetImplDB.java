@@ -45,8 +45,19 @@ public class ServicePlanetImplDB implements ServicePlanet {
 
 	@Override
 	public Planeta save(Planeta p) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		boolean resul = false;
+		
+		if(p.isNew()){
+			resul = daoPlaneta.create(p);
+		}else{
+			resul = daoPlaneta.update(p);
+		}
+		
+		if (resul == false){
+			throw new Exception("Excepcion salvando Planeta " + p.toString());			
+		}
+		
+		return p;
 	}
 
 	@Override

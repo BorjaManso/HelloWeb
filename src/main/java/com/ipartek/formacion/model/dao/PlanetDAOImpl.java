@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +36,44 @@ public class PlanetDAOImpl implements PlanetDAO {
 
 	@Override
 	public boolean create(Planeta pojo) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean resul = false;
+		String sql = "{call insertPlaneta(?,?)}";
+		CallableStatement cst= null;
+		
+		try {
+			conexion = db.getConexion();
+			cst = conexion.prepareCall(sql);
+			//parametros entrada
+			cst.setString(1, pojo.getNombre());
+			cst.setString(2, pojo.getImagen());
+			//parametro salida, id nuevo generado
+			cst.registerOutParameter(3,  Types.NUMERIC);
+			if ( cst.executeUpdate() == 1){
+				resul = true;
+				pojo.setId(cst.getInt(3));				
+			}			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				cst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			cst = null;
+			db.desconectar();
+		}
+		
+		return resul;
 	}
 
 	@Override
 	public List<Planeta> getAll() {
 		List<Planeta> planetas = null;
 		String sql = "{call getAllPlanetas()}";
-		conexion = db.getConexion();
 		try {
+			conexion = db.getConexion();
 			Planeta p = null;
 			CallableStatement cSmt = conexion.prepareCall(sql);
 			ResultSet rs = cSmt.executeQuery();
@@ -72,7 +101,7 @@ public class PlanetDAOImpl implements PlanetDAO {
 		
 		try{
 			conexion = db.getConexion();
-			CallableStatement cst = conexion.prepareCall("{call detallePlaneta(?)}");
+			CallableStatement cst = conexion.prepareCall("{call getByIdPlaneta(?)}");
 			cst.setLong(1, id);
 			
 			ResultSet rs = cst.executeQuery();			
@@ -94,29 +123,66 @@ public class PlanetDAOImpl implements PlanetDAO {
 
 	@Override
 	public boolean update(Planeta pojo) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean resul = false;
+		String sql = "{call updatePlaneta(?,?,?)}";
+		CallableStatement cst= null;
+		
+		try {
+			conexion = db.getConexion();
+			cst = conexion.prepareCall(sql);
+			//parametros entrada
+			cst.setString(1, pojo.getNombre());
+			cst.setString(2, pojo.getImagen());
+			cst.setLong(3, pojo.getId());
+			
+			//ejecutar
+			if ( cst.executeUpdate() == 1){
+				resul = true;			
+			}			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				cst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			cst = null;
+			db.desconectar();
+		}
+		
+		return resul;
 	}
+	
 
 	@Override
 	public boolean delete(long id) {
-		Planeta p = null;	
 		boolean resul = false;
+		String sql = "{call deletePlaneta(?)}";
+		CallableStatement cst= null;
 		
-		try{
+		try {
 			conexion = db.getConexion();
-			CallableStatement cst = conexion.prepareCall("{call eliminarPlaneta(?)}");
+			cst = conexion.prepareCall(sql);
 			cst.setLong(1, id);
 			
-			ResultSet rs = cst.executeQuery();		
-			
-			//TODO seguir desde aqui!
-			
-		}catch(Exception e){
+			//ejecutar
+			if ( cst.executeUpdate() == 1){
+				resul = true;			
+			}			
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
+			try {
+				cst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			cst = null;
 			db.desconectar();
-		}		
+		}
 		
 		return resul;
 	}
