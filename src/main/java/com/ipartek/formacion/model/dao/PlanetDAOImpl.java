@@ -37,7 +37,7 @@ public class PlanetDAOImpl implements PlanetDAO {
 	@Override
 	public boolean create(Planeta pojo) {
 		boolean resul = false;
-		String sql = "{call insertPlaneta(?,?)}";
+		String sql = "{call insertPlaneta(?,?,?)}";
 		CallableStatement cst= null;
 		
 		try {
@@ -46,8 +46,7 @@ public class PlanetDAOImpl implements PlanetDAO {
 			//parametros entrada
 			cst.setString(1, pojo.getNombre());
 			cst.setString(2, pojo.getImagen());
-			//parametro salida, id nuevo generado
-			cst.registerOutParameter(3,  Types.NUMERIC);
+			
 			if ( cst.executeUpdate() == 1){
 				resul = true;
 				pojo.setId(cst.getInt(3));				
@@ -104,13 +103,11 @@ public class PlanetDAOImpl implements PlanetDAO {
 			CallableStatement cst = conexion.prepareCall("{call getByIdPlaneta(?)}");
 			cst.setLong(1, id);
 			
-			ResultSet rs = cst.executeQuery();			
-			while (rs.next()) {
-				p = new Planeta();
-				p.setId(rs.getLong("id"));
-				p.setNombre(rs.getString("nombre"));
-				p.setImagen(rs.getString("imagen"));
-			}
+			ResultSet rs = cst.executeQuery();		
+			p = new Planeta();
+			p.setId(id);
+			p.setNombre(rs.getString("nombre"));
+			p.setImagen(rs.getString("imagen"));
 			
 		}catch(Exception e){
 			e.printStackTrace();
